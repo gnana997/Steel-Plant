@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+
+        <title id='Description'>jqxLinearGauge - Basic Demo</title>
+        <script type="text/javascript" src="../scripts/jquery-1.11.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+        <script type="text/javascript" src="js/button.js"></script>
+    </head>
+    <body>
+      <canvas id="speedChart" width="600" height="400" style="padding-top:150px;padding-bottom:50px"></canvas>
+      <button onclick="goback()" style="margin-left: 170px">Go Back</button>
+      <script type="text/javascript">
+        var xml = "<Readings><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>30.1</Temp><Humidity>38.61</Humidity><CO>10ppm"+
+        "</CO></Reading><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>20.1</Temp><Humidity>38.61</Humidity><CO>10ppm"+
+        "</CO></Reading><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>25.1</Temp><Humidity>32.61</Humidity><CO>10ppm"+
+        "</CO></Reading><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>26.1</Temp><Humidity>35.61</Humidity><CO>10ppm"+
+        "</CO></Reading><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>28.1</Temp><Humidity>36.61</Humidity><CO>10ppm"+
+        "</CO></Reading><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>19.1</Temp><Humidity>34.61</Humidity><CO>10ppm"+
+        "</CO></Reading><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>16.1</Temp><Humidity>31.61</Humidity><CO>10ppm"+
+        "</CO></Reading><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>22.1</Temp><Humidity>33.61</Humidity><CO>10ppm"+
+        "</CO></Reading><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>23.1</Temp><Humidity>37.61</Humidity><CO>10ppm"+
+        "</CO></Reading><Reading><Time>Sun Jun 10 15:27:18 2018</Time><Temp>24.1</Temp><Humidity>39.61</Humidity><CO>10ppm</CO></Reading></Readings>";
+
+        var parser,xmlDoc;
+        var temp= new Array();
+        var hum = new Array();
+        parser = new DOMParser();
+        xmlDoc = parser.parseFromString(xml,"text/xml");
+        var reading = xmlDoc.getElementsByTagName('Reading')
+        for(var i = 0;i<reading.length;i++){
+          temp.push(Number(reading[i].getElementsByTagName("Temp")[0].childNodes[0].nodeValue));
+          hum.push(Number(reading[i].getElementsByTagName("Humidity")[0].childNodes[0].nodeValue));
+        }
+        var speedCanvas = document.getElementById("speedChart");
+
+        Chart.defaults.global.defaultFontFamily = "Lato";
+        Chart.defaults.global.defaultFontSize = 18;
+
+        var dataFirst = {
+          label: "Temperature is",
+          data: temp,
+          lineTension: 0.3,
+          fill: false,
+          borderColor: 'red',
+          backgroundColor: 'transparent',
+          pointBorderColor: 'red',
+          pointBackgroundColor: 'lightgreen',
+          pointRadius: 5,
+          pointHoverRadius: 15,
+          pointHitRadius: 30,
+          pointBorderWidth: 2,
+          pointStyle: 'rect'
+        };
+
+        var dataSecond = {
+          label: "Humidity is",
+          data: hum,
+          lineTension: 0.3,
+          fill: false,
+          borderColor: 'purple',
+          backgroundColor: 'transparent',
+          pointBorderColor: 'purple',
+          pointBackgroundColor: 'lightgreen',
+          pointRadius: 5,
+          pointHoverRadius: 15,
+          pointHitRadius: 30,
+          pointBorderWidth: 2
+        };
+
+        var totalData = {
+        labels: ["1hr", "2hr", "3hr", "4hr", "5hr", "6hr", "7hr","8hr","9hr","10hr"],
+        datasets: [dataFirst, dataSecond]
+        };
+
+        var chartOptions = {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            boxWidth: 80,
+            fontColor: 'black'
+          }
+        }
+        };
+
+        var lineChart = new Chart(speedCanvas, {
+        type: 'line',
+        data: totalData,
+        options: chartOptions
+        });
+      </script>
+
+    </body>
+</html>
